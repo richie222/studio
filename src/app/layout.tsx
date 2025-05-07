@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import { Geist } from 'next/font/google'; // Corrected import, assuming Geist is the sans-serif one from 'next/font/google'
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"; // Added Toaster for potential future use
+import { DialogProvider } from "@/context/dialog-context";
 
 const geistSans = Geist({ // Assuming Geist is the main sans font object
   variable: '--font-geist-sans',
@@ -19,10 +20,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} font-sans antialiased`}> {/* Use font-sans utility from Tailwind if Geist is correctly set up as sans */}
-        {children}
-        <Toaster />
+    <html lang="en" suppressHydrationWarning={true}>
+      <body className={`${geistSans.variable} font-sans antialiased`}>
+        <DialogProvider>
+          {children}
+          <Toaster />
+        </DialogProvider>
       </body>
     </html>
   );

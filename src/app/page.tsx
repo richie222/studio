@@ -1,11 +1,15 @@
 
 "use client";
 
-import type { ChangeEvent } from 'react';
-import { useEffect, useState } from 'react';
-import { HeartPulse, Search } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import type { ChangeEvent } from "react";
+import { useEffect, useState } from "react";
+import { HeartPulse, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useRouter } from 'next/navigation';
+import Link from "next/link";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useDialogContext } from '@/context/dialog-context';
 
 export default function HomePage() {
   const [message, setMessage] = useState<string>("Hello, World!");
@@ -25,19 +29,42 @@ export default function HomePage() {
     setAnimationKey(prevKey => prevKey + 1);
   }, []);
 
+  const { showDialog, closeDialog, dialogState } = useDialogContext();
+
+  const router = useRouter();
+
+  const handleVeterinarianClick = () => {
+    showDialog({
+      title: '¿Deseas registrarte?',
+      description: '',
+      buttons: [
+        {
+          label: 'No',
+          onClick: () => closeDialog(),
+        },
+        {
+          label: 'Si',
+          onClick: () => {
+            closeDialog();
+            router.push('/veterinarian-register');
+          },
+        },
+      ],
+    });
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <header className="p-4 sm:p-6 border-b">
         <div className="container mx-auto">
-          {/* Top row for larger screens: Logo, Search, Other actions */}
           <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4 md:gap-6 flex-shrink-0"> {/* Group for Logo and Desktop Search */}
-              {/* Logo */}
+            <div className="flex items-center gap-4 md:gap-6 flex-shrink-0">
               <div className="flex items-center space-x-2">
                 <HeartPulse className="h-8 w-8 text-primary" />
-                <span className="font-semibold text-xl sm:text-2xl text-primary">PetWell</span>
+                <span className="font-semibold text-xl sm:text-2xl text-primary">
+                  PetWell
+                </span>
               </div>
-              {/* Desktop Search Bar (md and up) */}
               <div className="relative hidden md:block md:w-64 lg:w-80 xl:w-96">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
@@ -50,8 +77,16 @@ export default function HomePage() {
                 />
               </div>
             </div>
-
-            {/* Placeholder for other header items on the far right (e.g., User Menu, Notifications) */}
+            <div className="flex items-center ml-auto">
+              <Button
+                type="button"
+                variant="secondary"
+                className="text-sm"
+                onClick={handleVeterinarianClick}
+              >
+                ¿Sos Veterinario?
+              </Button>
+            </div>
             <div className="flex items-center space-x-2">
               {/* Future header items can go here */}
             </div>
@@ -75,7 +110,9 @@ export default function HomePage() {
       </header>
 
       <main className="flex-grow flex flex-col items-center justify-center p-6 sm:p-8">
-        <div className="w-full max-w-md"> {/* Removed space-y-8 as it has only one direct child now */}
+        <div className="w-full max-w-md">
+          {" "}
+          {/* Removed space-y-8 as it has only one direct child now */}
           <div className="text-center space-y-8">
             <h1
               key={animationKey}
@@ -84,24 +121,21 @@ export default function HomePage() {
             >
               {message || " "}
             </h1>
-            
-            <div className="space-y-3">
-              <Label htmlFor="message-input" className="block text-sm font-medium text-muted-foreground">
-                Customize your greeting:
-              </Label>
-              <Input
-                id="message-input"
-                type="text"
-                value={message}
-                onChange={handleInputChange}
-                placeholder="Enter your message"
-                className="w-full rounded-md border-input bg-card px-4 py-3 text-center text-base sm:text-lg shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                aria-label="Customize Greeting Message"
-              />
-            </div>
           </div>
         </div>
       </main>
+      <Dialog open={dialogState.isOpen} onOpenChange={closeDialog}>
+          <DialogContent className="sm:max-w-[425px]">
+            {dialogState.options && (
+                <DialogHeader>
+                  <DialogTitle>{dialogState.options.title}</DialogTitle>
+                  {dialogState.options.description && <DialogDescription>{dialogState.options.description}</DialogDescription>}
+                </DialogHeader>
+              )}
+            {dialogState.options?.buttons && <DialogFooter>
+                {dialogState.options.buttons.map((button, index) => (<Button key={index} onClick={button.onClick}>{button.label}</Button>))}</DialogFooter>}
+          </DialogContent>
+        </Dialog>
     </div>
   );
 }
