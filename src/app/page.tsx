@@ -6,10 +6,9 @@ import { useEffect, useState } from "react";
 import { HeartPulse, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useRouter } from 'next/navigation';
-import Link from "next/link";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useDialogContext } from '@/context/dialog-context';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function HomePage() {
   const [message, setMessage] = useState<string>("Hello, World!");
@@ -51,6 +50,52 @@ export default function HomePage() {
         },
       ],
     });
+  }
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(
+        "https://doctorpet.onrender.com/auth/logout",
+        {
+          method: "POST",
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        console.log("Logout: ", data.message);
+        showDialog({
+          title: 'Sesión cerrada',
+          description: 'Vuelve pronto',
+          buttons: [
+            {
+              label: 'Ok',
+              onClick: () => {
+                closeDialog();
+                router.push('/');
+              },
+            },
+          ],
+        })
+      } else if (response.status === 401) {
+        console.error("Error: ", data.error);
+        showDialog({
+          title: 'Error',
+          description: data.error,
+          buttons: [
+            {
+              label: 'Ok',
+              onClick: () => closeDialog(),
+            },
+          ],
+        })
+      } else {
+        console.error("Unexpected error:", data);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   }
 
   return (
@@ -104,6 +149,26 @@ export default function HomePage() {
                 ¿Ofreces algún servicio para mascotas?
               </Button>
             </div>
+            <div>
+                <Button
+                  type="button"
+                  className="text-sm"
+                  onClick={() => {
+                    router.push("/login")
+                  }}
+                >
+                  ¿Iniciar Sessión?
+                </Button>
+              </div>
+              <div>
+                <Button
+                  type="submit"
+                  className="text-sm"
+                  onClick={ handleLogout }
+                >
+                  ¿Cerrar Sessión?
+                </Button>
+              </div>
             </div>
             <div className="flex items-center space-x-2">
               {/* Future header items can go here */}
