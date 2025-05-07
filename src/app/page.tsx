@@ -14,7 +14,6 @@ export default function HomePage() {
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
-    // Increment key to re-trigger animation on the h1 element
     setAnimationKey(prevKey => prevKey + 1);
   };
 
@@ -22,7 +21,6 @@ export default function HomePage() {
     setSearchTerm(event.target.value);
   };
 
-  // Trigger animation on initial load
   useEffect(() => {
     setAnimationKey(prevKey => prevKey + 1);
   }, []);
@@ -30,36 +28,61 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <header className="p-4 sm:p-6 border-b">
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <HeartPulse className="h-8 w-8 text-primary" />
-            <span className="font-bold text-2xl text-primary">PetWell</span>
+        <div className="container mx-auto">
+          {/* Top row for larger screens: Logo, Search, Other actions */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4 md:gap-6 flex-shrink-0"> {/* Group for Logo and Desktop Search */}
+              {/* Logo */}
+              <div className="flex items-center space-x-2">
+                <HeartPulse className="h-8 w-8 text-primary" />
+                <span className="font-semibold text-xl sm:text-2xl text-primary">PetWell</span>
+              </div>
+              {/* Desktop Search Bar (md and up) */}
+              <div className="relative hidden md:block md:w-64 lg:w-80 xl:w-96">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  className="w-full rounded-full border-input bg-background px-10 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  aria-label="Search PetWell"
+                />
+              </div>
+            </div>
+
+            {/* Placeholder for other header items on the far right (e.g., User Menu, Notifications) */}
+            <div className="flex items-center space-x-2">
+              {/* Future header items can go here */}
+            </div>
           </div>
-          {/* Future header items can go here */}
+
+          {/* Mobile Search Bar (below logo/actions row, visible on <md screens) */}
+          <div className="mt-4 md:hidden">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="w-full rounded-full border-input bg-background px-10 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                aria-label="Search PetWell"
+              />
+            </div>
+          </div>
         </div>
       </header>
 
       <main className="flex-grow flex flex-col items-center justify-center p-6 sm:p-8">
-        <div className="w-full max-w-md space-y-8">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="w-full rounded-md border-input bg-card py-3 pl-10 pr-4 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              aria-label="Search"
-            />
-          </div>
-          
+        <div className="w-full max-w-md"> {/* Removed space-y-8 as it has only one direct child now */}
           <div className="text-center space-y-8">
             <h1
-              key={animationKey} // Changing the key re-mounts the component, re-triggering the animation
+              key={animationKey}
               className="text-4xl sm:text-5xl font-bold text-foreground animate-fadeIn"
-              aria-live="polite" // Announce changes to screen readers
+              aria-live="polite"
             >
-              {message || " "} {/* Display message, use space to maintain height if empty for animation */}
+              {message || " "}
             </h1>
             
             <div className="space-y-3">
