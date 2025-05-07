@@ -77,15 +77,33 @@ export default function HomePage() {
                 />
               </div>
             </div>
-            <div className="flex items-center ml-auto">
-              <Button
+            <div className="flex items-center ml-auto space-x-2">
+              <div>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="text-sm"
+                  onClick={handleVeterinarianClick}
+                >
+                  ¿Sos Veterinario?
+                </Button>
+              </div>
+              <div>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="text-sm"
+                >
+                  ¿Sos Centro Médico Veterinario?
+                </Button></div>
+              <div><Button
                 type="button"
                 variant="secondary"
                 className="text-sm"
-                onClick={handleVeterinarianClick}
               >
-                ¿Sos Veterinario?
+                ¿Ofreces algún servicio para mascotas?
               </Button>
+            </div>
             </div>
             <div className="flex items-center space-x-2">
               {/* Future header items can go here */}
