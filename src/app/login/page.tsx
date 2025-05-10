@@ -10,12 +10,15 @@ import { useDialogContext } from '@/context/dialog-context';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useRouter } from 'next/navigation';
 
+import { useSessionContext } from "@/context/session-context";
+// Assuming you have a way to manage session state globally, e.g., using Context or a state management library
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const { showDialog, closeDialog, dialogState } = useDialogContext();
 
+  const { setIsSessionActive } = useSessionContext();
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -37,15 +40,18 @@ export default function LoginPage() {
     console.log('Cookies:', document.cookie);
     console.log('Response status:', response.status);
       if (response.status === 200) {
-        console.log("Login successful:", data);
+        setIsSessionActive(true); // Update the session state
+ console.log("Login successful:", data);
         showDialog({
           title: data.message,
           description: 'Bienvenido: ' + data.user.email,
-          buttons: [
+ buttons: [
             {
               label: 'Ok',
               onClick: () => {
                 closeDialog();
+                // In a real application, you would set the session state here before navigating
+                // setSessionActive(true); // Example: Replace with your state management
                 router.push('/');
               },
             },

@@ -3,6 +3,7 @@ import { Geist } from 'next/font/google'; // Corrected import, assuming Geist is
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"; // Added Toaster for potential future use
 import { DialogProvider } from "@/context/dialog-context";
+import { SessionProvider } from "@/context/session-context"; // Import SessionProvider
 
 const geistSans = Geist({ // Assuming Geist is the main sans font object
   variable: '--font-geist-sans',
@@ -21,12 +22,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body className={`${geistSans.variable} font-sans antialiased`}>
-        <DialogProvider>
-          {children}
-          <Toaster />
-        </DialogProvider>
-      </body>
+      <SessionProvider> {/* Wrap with SessionProvider */}
+ <body className={`${geistSans.variable} font-sans antialiased`}>
+ <DialogProvider>
+ {children}
+ <Toaster />
+ </DialogProvider>
+ </body>
+      </SessionProvider> {/* Close SessionProvider */}
     </html>
   );
 }

@@ -7,6 +7,7 @@ import { HeartPulse, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
+import { useSessionContext } from '@/context/session-context';
 import { useDialogContext } from '@/context/dialog-context';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -29,7 +30,7 @@ export default function HomePage() {
   }, []);
 
   const { showDialog, closeDialog, dialogState } = useDialogContext();
-
+  const { isSessionActive, setIsSessionActive } = useSessionContext();
   const router = useRouter();
 
   const handleVeterinarianClick = () => {
@@ -80,6 +81,7 @@ export default function HomePage() {
             {
               label: 'Ok',
               onClick: () => {
+                setIsSessionActive(false);
                 closeDialog();
                 router.push('/');
               },
@@ -157,6 +159,7 @@ export default function HomePage() {
                 ¿Ofreces algún servicio para mascotas?
               </Button>
             </div>
+            {!isSessionActive ? (
             <div>
                 <Button
                   type="button"
@@ -168,6 +171,7 @@ export default function HomePage() {
                   ¿Iniciar Sessión?
                 </Button>
               </div>
+            ) : (
               <div>
                 <Button
                   type="submit"
@@ -177,6 +181,7 @@ export default function HomePage() {
                   ¿Cerrar Sessión?
                 </Button>
               </div>
+              )}
             </div>
             <div className="flex items-center space-x-2">
               {/* Future header items can go here */}
