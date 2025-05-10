@@ -24,6 +24,7 @@ export default function LoginPage() {
         "https://doctorpet.onrender.com/auth/login",
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
@@ -32,7 +33,9 @@ export default function LoginPage() {
       );
 
       const data = await response.json();
-
+    // Log para debugging
+    console.log('Cookies:', document.cookie);
+    console.log('Response status:', response.status);
       if (response.status === 200) {
         console.log("Login successful:", data);
         showDialog({
@@ -49,10 +52,10 @@ export default function LoginPage() {
           ],
         })
       } else if (response.status === 401) {
-        console.error("Error: ", data.errors);
+        console.error("Error: ", data.error);
         showDialog({
           title: 'Error',
-          description: data.errors,
+          description: data.error,
           buttons: [
             {
               label: 'Ok',

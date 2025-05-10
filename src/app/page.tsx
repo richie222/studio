@@ -53,17 +53,25 @@ export default function HomePage() {
   }
 
   const handleLogout = async () => {
+
     try {
+
       const response = await fetch(
         "https://doctorpet.onrender.com/auth/logout",
         {
           method: "POST",
+          credentials: "include",
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
         }
       );
 
       const data = await response.json();
 
       if (response.status === 200) {
+
         console.log("Logout: ", data.message);
         showDialog({
           title: 'Sesión cerrada',
@@ -79,10 +87,10 @@ export default function HomePage() {
           ],
         })
       } else if (response.status === 401) {
-        console.error("Error: ", data.error);
+        console.error("Error: ", data.error + '. ' +data.details);
         showDialog({
-          title: 'Error',
-          description: data.error,
+          title: data.error,
+          description: data.details,
           buttons: [
             {
               label: 'Ok',
