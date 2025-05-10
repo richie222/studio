@@ -12,7 +12,7 @@ import { useDialogContext } from '@/context/dialog-context';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function HomePage() {
-  const [message, setMessage] = useState<string>("Hello, World!");
+  const [message, setMessage] = useState<string>("Hola, Mundo!");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [animationKey, setAnimationKey] = useState<number>(0);
 
@@ -117,7 +117,7 @@ export default function HomePage() {
               <div className="flex items-center space-x-2">
                 <HeartPulse className="h-8 w-8 text-primary" />
                 <span className="font-semibold text-xl sm:text-2xl text-primary">
-                  PetWell
+                  PetDoctor
                 </span>
               </div>
               <div className="relative hidden md:block md:w-64 lg:w-80 xl:w-96">

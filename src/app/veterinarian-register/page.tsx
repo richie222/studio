@@ -33,12 +33,52 @@ const VeterinarianRegisterPage: React.FC = () => {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Name:', name);
-    console.log('Email:', email);
-    console.log('Password:', password);
-    console.log('Image:', image);
+
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', password);
+    if (image) {
+      formData.append('profileImage', image);
+    }
+
+    try {
+      const response = await fetch('https://doctorpet.onrender.com/auth/register', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      console.log(data);
+
+      if (response.status === 201) {
+        showDialog({
+          title: 'Registro',
+          description: data.message +': '+ data.user.email,
+          buttons: [
+            {
+              label: 'Ok',
+              onClick: () => {
+                closeDialog();
+                router.push('/');
+              },
+            },
+          ],
+        });
+      }
+
+      if (response.status === 400) {
+
+        showDialog({
+          title: 'Error de Registro',
+          description: data.error,
+          buttons: [{ label: 'OK', onClick: closeDialog, }],
+        });
+      }
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
   const handleCancel = () => {
     showDialog({
@@ -69,12 +109,12 @@ const VeterinarianRegisterPage: React.FC = () => {
         </header>
         <main className="flex-1 flex items-center justify-center"> <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
-          Register Veterinarian
+          Registro de Veterinario
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-700">
-              Name
+              Nombre
             </label>
             <input
               type="text"
@@ -82,12 +122,12 @@ const VeterinarianRegisterPage: React.FC = () => {
               value={name}
               onChange={handleNameChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
             />
           </div>
           <div>
             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-700">
-              Email
+              Correo
+
             </label>
             <input
               type="email"
@@ -100,8 +140,9 @@ const VeterinarianRegisterPage: React.FC = () => {
           </div>
           <div>
             <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-700">
-              Password
+              Contraseña
             </label>
+
             <input
               type="password"
               id="password"
@@ -113,7 +154,7 @@ const VeterinarianRegisterPage: React.FC = () => {
           </div>
           <div>
             <label htmlFor="image" className="block mb-2 text-sm font-medium text-gray-700">
-              Image
+              Imagen
             </label>
             <input
               type="file"
@@ -129,13 +170,12 @@ const VeterinarianRegisterPage: React.FC = () => {
               variant={'destructive'}
               onClick={handleCancel}
             >
-              Cancel
+              Cancelar
             </Button>
             <Button
               type="submit"
-              
             >
-              Submit
+              Registrar
             </Button>
           </div>
           

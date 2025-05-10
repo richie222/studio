@@ -18,11 +18,11 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <SessionProvider> {/* Wrap with SessionProvider */}
+      <SessionProvider> {/* Wrap with SessionProvider */} {/* Remove the extra space here */}
  <body className={`${geistSans.variable} font-sans antialiased`}>
  <DialogProvider>
  {children}

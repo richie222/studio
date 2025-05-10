@@ -74,6 +74,15 @@
   }
 }
 
+/* Add a visual indicator for required input fields */
+input:required,
+textarea:required,
+select:required {
+  border-color: #FF0000; /* Red border for required fields */
+}
+
+
+
 @layer base {
   * {
     @apply border-border;

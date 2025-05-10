@@ -116,6 +116,7 @@ export default function LoginPage() {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
                 className="col-span-4"
               />
             </div>
@@ -124,7 +125,7 @@ export default function LoginPage() {
                 id="password"
                 type="password"
                 placeholder="Contraseña"
-                
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 
