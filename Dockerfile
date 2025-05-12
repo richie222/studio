@@ -1,5 +1,5 @@
 # Use a Node.js image as the base image
-FROM node:20-alpine as base
+FROM node:20-alpine AS base
 
 # Set the working directory in the container
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Use a lean production image
-FROM node:20-alpine as runner
+FROM node:20-alpine AS runner
 
 # Set the working directory
 WORKDIR /app
