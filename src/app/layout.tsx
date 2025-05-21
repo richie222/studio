@@ -1,11 +1,11 @@
 import type {Metadata} from 'next';
-import { Geist } from 'next/font/google';
+import { Geist } from 'next/font/google'; // Corrected import, assuming Geist is the sans-serif one from 'next/font/google'
 import './globals.css';
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/toaster"; // Added Toaster for potential future use
 import { DialogProvider } from "@/context/dialog-context";
-import { SessionProvider } from "@/context/session-context";
+import { SessionProvider } from "@/context/session-context"; // Import SessionProvider
 
-const geistSans = Geist({
+const geistSans = Geist({ // Assuming Geist is the main sans font object
   variable: '--font-geist-sans',
   subsets: ['latin'],
 });
@@ -22,14 +22,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body className={`${geistSans.variable} font-sans antialiased`}>
-        <SessionProvider>
-          <DialogProvider>
-            {children}
-            <Toaster />
-          </DialogProvider>
-        </SessionProvider>
-      </body>
+      <SessionProvider> {/* Wrap with SessionProvider */} {/* Remove the extra space here */}
+ <body className={`${geistSans.variable} font-sans antialiased`}>
+ <DialogProvider>
+ {children}
+ <Toaster />
+ </DialogProvider>
+ </body>
+      </SessionProvider> {/* Close SessionProvider */}
     </html>
   );
 }
