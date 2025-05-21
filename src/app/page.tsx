@@ -183,7 +183,9 @@ export default function HomePage() {
                 type="button"
                 variant="secondary"
                 className="text-sm"
-                onClick={handleVeterinarianClick}
+                onClick={() => {
+                  router.push("/login")
+                }}
               >
                 ¿Sos Veterinario?
               </Button>
