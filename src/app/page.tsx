@@ -4,7 +4,7 @@ import type { ChangeEvent } from "react";
 import Image from 'next/image';
 import Slider from "react-slick";
 import { useEffect, useState } from "react";
-import { HeartPulse, Search } from "lucide-react";
+import { HeartPulse, Search, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -19,6 +19,7 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [petImages, setPetImages] = useState<string[]>([]);
   const [animationKey, setAnimationKey] = useState<number>(0);
+  const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
@@ -130,132 +131,210 @@ export default function HomePage() {
     autoplaySpeed: 3000,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1200,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
           slidesToScroll: 1,
           infinite: true,
           dots: true
         }
       },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+          arrows: false
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+          arrows: false
+        }
+      }
     ]
   };
 
-  // Add a style block for the carousel navigation arrows
   const carouselArrowStyles = `
     .slick-prev:before,
     .slick-next:before {
-      color: #1e3a8a; /* Replace with your primary blue color value */
-      font-size: 30px; /* Adjust size if needed */
-      opacity: 1; /* Ensure visibility */
+      color: #1e3a8a;
+      font-size: 24px;
+      opacity: 1;
+    }
+    
+    @media (max-width: 768px) {
+      .slick-prev:before,
+      .slick-next:before {
+        font-size: 18px;
+      }
     }
   `;
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      {/* Add the style tag at the top of the component */}
       <style dangerouslySetInnerHTML={{ __html: carouselArrowStyles }} />
       
-      <header className="p-4 sm:p-6 border-b">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 md:gap-6 flex-shrink-0">
-            <div className="flex items-center space-x-2">
-              <HeartPulse className="h-8 w-8 text-primary" />
-              <span className="font-semibold text-xl sm:text-2xl text-primary">
-                PetDoctor
-              </span>
-            </div>
-            <div className="relative hidden md:block md:w-64 lg:w-80 xl:w-96">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className="w-full rounded-full border-input bg-background px-10 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                aria-label="Search PetWell"
-              />
-            </div>
+      <header className="p-3 sm:p-4 lg:p-6 border-b">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
+          {/* Logo */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <HeartPulse className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+            <span className="font-semibold text-lg sm:text-xl lg:text-2xl text-primary">
+              PetDoctor
+            </span>
           </div>
-          <div className="flex items-center ml-auto space-x-2">
-            <div>
-              <Button
-                type="button"
-                variant="secondary"
-                className="text-sm"
-                onClick={() => {
-                  router.push("/login")
-                }}
-              >
-                ¿Sos Veterinario?
-              </Button>
-            </div>
-            <div>
-              <Button
-                type="button"
-                variant="secondary"
-                className="text-sm"
-              >
-                ¿Sos Centro Médico Veterinario?
-              </Button>
-            </div>
-            <div>
-              <Button
-                type="button"
-                variant="secondary"
-                className="text-sm"
-              >
-                ¿Ofreces algún servicio para mascotas?
-              </Button>
-            </div>
-            {!isSessionActive ? (
-              <div>
-                <Button
-                  type="button"
-                  className="text-sm"
-                  onClick={() => {
-                    router.push("/login")
-                  }}
-                >
-                  ¿Iniciar Sessión?
-                </Button>
-              </div>
-            ) : (
-              <div>
-                <Button
-                  type="submit"
-                  className="text-sm"
-                  onClick={handleLogout}
-                >
-                  ¿Cerrar Sessión?
-                </Button>
-              </div>
-            )}
-          </div>
-          <div className="flex items-center space-x-2">
-            {/* Future header items can go here */}
-          </div>
-        </div>
 
-        {/* Mobile Search Bar (below logo/actions row, visible on <md screens) */}
-        <div className="mt-4 md:hidden">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          {/* Desktop Search */}
+          <div className="relative hidden lg:block w-48 xl:w-80">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="w-full rounded-full border-input bg-background px-10 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="w-full rounded-full border-input bg-background px-10 py-2 text-sm"
+              aria-label="Search PetWell"
+            />
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden xl:flex items-center space-x-2">
+            <Button
+              type="button"
+              variant="secondary"
+              className="text-xs lg:text-sm whitespace-nowrap"
+              onClick={() => router.push("/login")}
+            >
+              ¿Sos Veterinario?
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="text-xs lg:text-sm whitespace-nowrap"
+            >
+              ¿Centro Médico?
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="text-xs lg:text-sm whitespace-nowrap"
+            >
+              ¿Ofreces servicios?
+            </Button>
+            {!isSessionActive ? (
+              <Button
+                type="button"
+                className="text-xs lg:text-sm whitespace-nowrap"
+                onClick={() => router.push("/login")}
+              >
+                Iniciar Sesión
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                className="text-xs lg:text-sm whitespace-nowrap"
+                onClick={handleLogout}
+              >
+                Cerrar Sesión
+              </Button>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="xl:hidden">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Mobile/Tablet Search */}
+        <div className="mt-3 lg:hidden">
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="w-full rounded-full border-input bg-background px-10 py-2 text-sm"
               aria-label="Search PetWell"
             />
           </div>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {showMobileMenu && (
+          <div className="xl:hidden mt-4 p-4 bg-gray-50 rounded-lg space-y-2">
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full text-sm"
+              onClick={() => {
+                router.push("/login");
+                setShowMobileMenu(false);
+              }}
+            >
+              ¿Sos Veterinario?
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full text-sm"
+              onClick={() => setShowMobileMenu(false)}
+            >
+              ¿Centro Médico Veterinario?
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full text-sm"
+              onClick={() => setShowMobileMenu(false)}
+            >
+              ¿Ofreces servicios para mascotas?
+            </Button>
+            {!isSessionActive ? (
+              <Button
+                type="button"
+                className="w-full text-sm"
+                onClick={() => {
+                  router.push("/login");
+                  setShowMobileMenu(false);
+                }}
+              >
+                Iniciar Sesión
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                className="w-full text-sm"
+                onClick={() => {
+                  handleLogout();
+                  setShowMobileMenu(false);
+                }}
+              >
+                Cerrar Sesión
+              </Button>
+            )}
+          </div>
+        )}
       </header>
 
       {/* Pet Images Carousel */}
       {petImages.length > 0 && (
-        <div className="w-full max-w-3xl mt-8 mx-auto">
+        <div className="w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl mt-4 sm:mt-6 lg:mt-8 mx-auto px-4">
           <Slider {...settings} className="carousel-slider">
             {petImages.map((imageUrl, index) => (
               <div key={index} className="carousel-image-container">
@@ -264,7 +343,6 @@ export default function HomePage() {
                   alt={`Mascota ${index + 1}`}
                   width={400}
                   height={300}
-                  objectFit="cover"
                   className="carousel-image rounded-md"
                 />
               </div>
@@ -274,63 +352,92 @@ export default function HomePage() {
       )}
 
       {/* Animal Type Cards Section */}
-      <section className="w-full py-12 md:py-16 lg:py-20">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">Mascotas</h2>
-        <div className="flex justify-center gap-6 flex-wrap">
-          <div className="w-40 h-40 flex flex-col items-center justify-center bg-white rounded-full shadow-md hover:shadow-lg transition-shadow cursor-pointer">
-            <Image src="/images/dog-icon.png" alt="Dog Icon" width={60} height={60} className="mb-2" />
-            <span className="text-lg font-medium text-gray-700">Dogs</span>
-          </div>
-          <div className="w-40 h-40 flex flex-col items-center justify-center bg-white rounded-full shadow-md hover:shadow-lg transition-shadow cursor-pointer">
-            <Image src="/images/cat-icon.png" alt="Cat Icon" width={60} height={60} className="mb-2" />
-            <span className="text-lg font-medium text-gray-700">Cats</span>
-          </div>
-          <div className="w-40 h-40 flex flex-col items-center justify-center bg-white rounded-full shadow-md hover:shadow-lg transition-shadow cursor-pointer">
-            <Image src="/images/bird-icon.png" alt="Bird Icon" width={60} height={60} className="mb-2" />
-            <span className="text-lg font-medium text-gray-700">Birds</span>
-          </div>
-          <div className="w-40 h-40 flex flex-col items-center justify-center bg-white rounded-full shadow-md hover:shadow-lg transition-shadow cursor-pointer">
-            <Image src="/images/reptile-icon.png" alt="Reptile Icon" width={60} height={60} className="mb-2" />
-            <span className="text-lg font-medium text-gray-700">Reptiles</span>
-          </div>
-          {/* Add more animal types as needed */}
+      <section className="w-full py-8 sm:py-12 lg:py-16 xl:py-20 px-4">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-6 sm:mb-8">Mascotas</h2>
+        <div className="flex justify-center gap-3 sm:gap-4 lg:gap-6 flex-wrap max-w-6xl mx-auto">
+          {[
+            { src: "/images/dog-icon.png", alt: "Dog Icon", label: "Dogs" },
+            { src: "/images/cat-icon.png", alt: "Cat Icon", label: "Cats" },
+            { src: "/images/bird-icon.png", alt: "Bird Icon", label: "Birds" },
+            { src: "/images/reptile-icon.png", alt: "Reptile Icon", label: "Reptiles" }
+          ].map((animal, index) => (
+            <div 
+              key={index}
+              className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40 flex flex-col items-center justify-center bg-white rounded-full shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+            >
+              <Image 
+                src={animal.src} 
+                alt={animal.alt} 
+                width={40} 
+                height={40} 
+                className="mb-1 sm:mb-2 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12" 
+              />
+              <span className="text-xs sm:text-sm lg:text-base font-medium text-gray-700 text-center">
+                {animal.label}
+              </span>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Add placeholder images for the animal type cards */}
+      {/* Hidden placeholder images */}
       <div style={{ display: 'none' }}>
         <Image src="/images/dog-icon.png" alt="Dog Icon Placeholder" width={1} height={1} />
         <Image src="/images/cat-icon.png" alt="Cat Icon Placeholder" width={1} height={1} />
         <Image src="/images/bird-icon.png" alt="Bird Icon Placeholder" width={1} height={1} />
         <Image src="/images/reptile-icon.png" alt="Reptile Icon Placeholder" width={1} height={1} />
       </div>
-      {/* End of placeholder images */}
 
-      {/* Rest of your main content */}
-      <main className="flex-grow flex flex-col items-center p-6 sm:p-8">
+      {/* Main content */}
+      <main className="flex-grow flex flex-col items-center p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-md">
           <div className="text-center">
             {/* Tu contenido aquí */}
           </div>
         </div>
       </main>
+
+      {/* Custom styles */}
+      <style jsx>{`
+        .carousel-image-container {
+          width: 100%;
+          height: 150px;
+          overflow: hidden;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        
+        @media (min-width: 640px) {
+          .carousel-image-container {
+            height: 200px;
+          }
+        }
+        
+        @media (min-width: 768px) {
+          .carousel-image-container {
+            height: 250px;
+          }
+        }
+        
+        @media (min-width: 1024px) {
+          .carousel-image-container {
+            height: 300px;
+          }
+        }
+        
+        @media (min-width: 1280px) {
+          .carousel-image-container {
+            height: 350px;
+          }
+        }
+        
+        .carousel-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      `}</style>
     </div>
   );
 }
-
-// Add a style block for the carousel-image class
-const styles = `
-  .carousel-image-container {
-    width: 300px;
-    height: 200px;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .carousel-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`;
