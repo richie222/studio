@@ -4,8 +4,9 @@ import type { ChangeEvent } from "react";
 import Image from 'next/image';
 import Slider from "react-slick";
 import { useEffect, useState } from "react";
-import { HeartPulse, Search, Menu } from "lucide-react";
+import { HeartPulse, Search, Menu, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useRouter } from 'next/navigation';
@@ -17,6 +18,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 export default function HomePage() {
   const [message, setMessage] = useState<string>("Hola, Mundo!");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [petImages, setPetImages] = useState<string[]>([]);
   const [animationKey, setAnimationKey] = useState<number>(0);
   const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
@@ -28,6 +30,11 @@ export default function HomePage() {
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleSearch = () => {
+    console.log(`Buscando: ${searchTerm} en categoría: ${selectedCategory}`);
+    // Aquí puedes agregar la lógica de búsqueda
   };
 
   useEffect(() => {
@@ -192,17 +199,66 @@ export default function HomePage() {
             </span>
           </div>
 
-          {/* Desktop Search */}
-          <div className="relative hidden lg:block w-48 xl:w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="w-full rounded-full border-input bg-background px-10 py-2 text-sm"
-              aria-label="Search PetWell"
-            />
+          {/* Desktop Search - Estilo Amazon Corregido */}
+          <div className="relative hidden lg:flex w-48 xl:w-96 bg-white rounded-md border border-gray-300 overflow-hidden shadow-sm">
+            {/* Dropdown de categorías */}
+            <div className="flex-shrink-0 bg-gray-100 border-r border-gray-300 relative">
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-20 xl:w-28 h-10 border-0 bg-transparent rounded-none focus:ring-0 text-xs xl:text-sm px-2 [&>svg]:hidden flex items-center justify-between">
+                  <span className="truncate">
+                    {selectedCategory === "all" ? "Todos" : 
+                     selectedCategory === "veterinarios" ? "Veterinarios" :
+                     selectedCategory === "clinicas" ? "Clínicas" :
+                     selectedCategory === "servicios" ? "Servicios" :
+                     selectedCategory === "productos" ? "Productos" :
+                     selectedCategory === "emergencias" ? "Emergencias" :
+                     selectedCategory === "especialistas" ? "Especialistas" :
+                     selectedCategory === "farmacias" ? "Farmacias" :
+                     selectedCategory === "grooming" ? "Grooming" :
+                     selectedCategory === "entrenamiento" ? "Entrenamiento" :
+                     selectedCategory === "guarderia" ? "Guardería" :
+                     selectedCategory === "adopcion" ? "Adopción" : "Todos"}
+                  </span>
+                  <ChevronDown className="h-3 w-3 xl:h-4 xl:w-4 flex-shrink-0" />
+                </SelectTrigger>
+                <SelectContent className="w-56">
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="veterinarios">Veterinarios</SelectItem>
+                  <SelectItem value="clinicas">Clínicas Veterinarias</SelectItem>
+                  <SelectItem value="servicios">Servicios para Mascotas</SelectItem>
+                  <SelectItem value="productos">Productos</SelectItem>
+                  <SelectItem value="emergencias">Emergencias</SelectItem>
+                  <SelectItem value="especialistas">Especialistas</SelectItem>
+                  <SelectItem value="farmacias">Farmacias Veterinarias</SelectItem>
+                  <SelectItem value="grooming">Grooming</SelectItem>
+                  <SelectItem value="entrenamiento">Entrenamiento</SelectItem>
+                  <SelectItem value="guarderia">Guardería</SelectItem>
+                  <SelectItem value="adopcion">Adopción</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {/* Campo de búsqueda expandido */}
+            <div className="flex-1 min-w-0">
+              <Input
+                type="search"
+                placeholder="Buscar veterinarios, servicios, productos..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="w-full h-10 border-0 rounded-none focus:ring-0 focus:outline-none focus-visible:ring-0 text-sm px-3 bg-white"
+                aria-label="Search PetDoctor"
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              />
+            </div>
+            
+            {/* Botón de búsqueda con color corporativo */}
+            <Button 
+              type="button"
+              className="flex-shrink-0 w-10 xl:w-12 h-10 bg-primary hover:bg-primary/90 rounded-none border-0 p-0"
+              onClick={handleSearch}
+            >
+              <Search className="h-4 w-4 xl:h-5 xl:w-5 text-white" />
+            </Button>
           </div>
 
           {/* Desktop Navigation */}
@@ -260,18 +316,61 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Mobile/Tablet Search */}
+        {/* Mobile/Tablet Search - Estilo Amazon Corregido */}
         <div className="mt-3 lg:hidden">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="w-full rounded-full border-input bg-background px-10 py-2 text-sm"
-              aria-label="Search PetWell"
-            />
+          <div className="flex bg-white rounded-md border border-gray-300 overflow-hidden shadow-sm">
+            {/* Dropdown móvil */}
+            <div className="flex-shrink-0 bg-gray-100 border-r border-gray-300">
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-16 sm:w-20 h-10 border-0 bg-transparent rounded-none focus:ring-0 text-xs px-1 [&>svg]:hidden flex items-center justify-between">
+                  <span className="truncate text-xs">
+                    {selectedCategory === "all" ? "Todos" : 
+                     selectedCategory === "veterinarios" ? "Vets" :
+                     selectedCategory === "clinicas" ? "Clínicas" :
+                     selectedCategory === "servicios" ? "Servicios" :
+                     selectedCategory === "productos" ? "Productos" :
+                     "Todos"}
+                  </span>
+                  <ChevronDown className="h-3 w-3 flex-shrink-0" />
+                </SelectTrigger>
+                <SelectContent className="w-56">
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="veterinarios">Veterinarios</SelectItem>
+                  <SelectItem value="clinicas">Clínicas Veterinarias</SelectItem>
+                  <SelectItem value="servicios">Servicios para Mascotas</SelectItem>
+                  <SelectItem value="productos">Productos</SelectItem>
+                  <SelectItem value="emergencias">Emergencias</SelectItem>
+                  <SelectItem value="especialistas">Especialistas</SelectItem>
+                  <SelectItem value="farmacias">Farmacias Veterinarias</SelectItem>
+                  <SelectItem value="grooming">Grooming</SelectItem>
+                  <SelectItem value="entrenamiento">Entrenamiento</SelectItem>
+                  <SelectItem value="guarderia">Guardería</SelectItem>
+                  <SelectItem value="adopcion">Adopción</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {/* Campo de búsqueda móvil expandido */}
+            <div className="flex-1 min-w-0">
+              <Input
+                type="search"
+                placeholder="Buscar..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="w-full h-10 border-0 rounded-none focus:ring-0 focus:outline-none focus-visible:ring-0 text-sm px-3 bg-white"
+                aria-label="Search PetDoctor"
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              />
+            </div>
+            
+            {/* Botón de búsqueda móvil con color corporativo */}
+            <Button 
+              type="button"
+              className="flex-shrink-0 w-10 h-10 bg-primary hover:bg-primary/90 rounded-none border-0 p-0"
+              onClick={handleSearch}
+            >
+              <Search className="h-4 w-4 text-white" />
+            </Button>
           </div>
         </div>
 
